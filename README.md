@@ -1,4 +1,4 @@
-# WibbleWobble
+# WibbleWobble v1.1
 
 ## Why WibbleWobble
 
@@ -175,8 +175,14 @@
 - **Beam Race Sync:**
   - Enabled: Another form of vsync for stereoscopic.
   - Disabled: Off.
-- **Beam Race Scanline Count:** Adjust to improve stereoscopic results.
-
+- **Beam Race Scanline Count:** 
+  - Scanline count to wait after vertical blank.
+- **Stereo Thread:**
+  - Enabled: Stereoscopic sync happens on a separate thread.
+  - Disabled: Stereoscopic sync happens on the main thread.
+- **Stereo Sync Delay Microseconds:**
+  - The number of microseconds to delay stereo sync at the end of a frame.
+  
 ### Game Config
 
 - **Window Size (X,Y pixels):** WibbleWobble resizes the game window to these values.
