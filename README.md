@@ -1,4 +1,4 @@
-# WibbleWobble v1.1
+# WibbleWobble v1.2
 
 ## Why WibbleWobble
 
@@ -182,6 +182,8 @@
   - Disabled: Stereoscopic sync happens on the main thread.
 - **Stereo Sync Delay Microseconds:**
   - The number of microseconds to delay stereo sync at the end of a frame.
+- **DLP 3D Pixel Height:**
+  - The height in pixels of the DLP 3D Ready signal line at the bottom of the screen for sequential output to DLP projectors. 0 == disabled.
   
 ### Game Config
 
