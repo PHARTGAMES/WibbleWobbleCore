@@ -228,8 +228,18 @@
 
 - Any issues please raise an issue on GitHub and/or ask a question on the Discord.
 
+---
+
+## Support Me
+
+- [Patreon](https://patreon.com/PHARTGAMES)
+
+---
+
 ## Socials
 
 - [Discord](https://discord.gg/gGUufTdpgG)
+
+
 	
 	
