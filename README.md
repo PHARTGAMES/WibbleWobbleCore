@@ -1,4 +1,4 @@
-# WibbleWobble v1.3
+# WibbleWobble v1.4
 
 
 [![Watch the video](https://img.youtube.com/vi/UCsU6N2qzyI/0.jpg)](https://youtu.be/UCsU6N2qzyI)
@@ -129,6 +129,16 @@
 
 ---
 
+## Hotkey Reference
+
+- **Start WibbleWobble:** SHIFT + END
+- **Toggle UI:** SHIFT + END
+- **Toggle overlay focus:** SHIFT + /
+- **ReCentre tracking:** SHIFT + .
+- **Switch Stereo eye order:** SHIFT + ,
+
+---
+
 ## Configuration Workflows
 
 - **Toggle UI:**  
@@ -140,22 +150,28 @@
 ### Rig Configuration
 
 - Click **Rig Config** in the Tool Box to open the Rig Configuration window.
+- Left mouse and drag within the screen visualiser rotates around the screens.
+- Mouse scroll wheel while hovering the screen visualiser zooms in and out.
 - Click **Edit Screen 0** to open the Screen Config.
 
-### Screen Config
+### Edit Screen #
+
+**Common Properties:**
+- **Local Position (X, Y, Z) (m):** Screen position relative to your head.
+- **Local Rotation (Pitch, Yaw, Roll) (°):** Euler angles in degrees.
+- **Min U:** This represents the normalized horizontal coordinate on the texture that corresponds to the left edge of the screen.
+- **Max U:** This represents the normalized horizontal coordinate on the texture that corresponds to the right edge of the screen.
+- **Min V:** This represents the normalized vertical coordinate on the texture that corresponds to the top edge of the screen.
+- **Max V:** This represents the normalized vertical coordinate on the texture that corresponds to the bottom edge of the screen.
 
 **Flat Screen:**
 - **Width/Height (m):** Visible area dimensions.
-- **Local Position (X, Y, Z) (m):** Screen position relative to your head.
-- **Local Rotation (Pitch, Yaw, Roll) (°):** Euler angles in degrees.
 
 **Cylinder (Curved) Screen:**
 - **Height (m)**: Visible area height.
 - **Radius (m)**: Curve radius.
 - **Fill Angle (°)**: Curve coverage in degrees.
 - **Curve Steps**: Higher values result in a smoother curve.
-- **Local Position (X, Y, Z) (m)**: Position relative to your head.
-- **Local Rotation (Pitch, Yaw, Roll) (°)**: Euler angles in degrees.
 
 ### Client Config
 
@@ -212,9 +228,35 @@
 
 ---
 
-## Triple Screen Guide
+## Triple Screen Guide 
 
-- Soon
+ This is an example of setting up three screens in a conventional wrap around manner. 
+ More or less than three screens can be added using similar principles.
+ 
+- Enable NVidia surround or AMD Eyefinity so that your desktop is wrapped to your monitors.
+- Enter the WibbleWobble UI with the Shift + End hotkey.
+- Click on Client Config in the Tool Box window and set Window Size X and Window Size Y to match your desktop resolution.
+- **OPTIONALLY** - Click on Client config in the Tool Box window and disable reprojection temporarily so you can see the texture mapped to all screens.
+- Click on Rig Config in the Tool Box window.
+- Add up to three screens by pressing the Add Screen button an appropriate amount of times.
+- Click the Edit Screen buttons once for each screen to get an Edit Screen # window for each screen.
+- For triple screens, order the screens left to right, Screen 0 on the left, Screen 1 in the middle and Screen 2 on the right.
+- For each screen select the appropriate Screen Type and set the dimensions, curve properties, etc.
+- For screen 0 decrease the Local Position X value to move it to the left.
+- For screen 2 increase the Local Position X value to move it to the right.
+- For screen 0 change the Local Rotation Yaw value to a negative angle in degress that matches the angle your side monitors relative to the centre monitor.
+- For screen 2 change the Local Rotation Yaw value to a positive angle in degress that matches the angle your side monitors relative to the centre monitor.
+- For screen 0 change the Max U value to 0.333333; this maps the right edge of screen 0 to one third of the texture in the horizontal direction.
+- For screen 1 change the Min U value to 0.333333; this maps the left edge of screen 1 to one third of the texture in the horizontal direction.
+- For screen 1 change the Max U value to 0.666666; this maps the right edge of screen 1 to two thirds of the texture in the horizontal direction.
+- For screen 2 change the Min U value to 0.666666; this maps the left edge of screen 2 to two thirds of the texture in the horizontal direction.
+- Sit in the position you will be sitting while playing and measure from your eyes to the centre monitor.
+- Input this measurement in metres into the Local Position Z field of screen 1.
+- For screen 0 and screen 1 adjust the Local Position X and Local Position Y values until the side screens line up with how they do in reality. You can perform measurements of the positions of your real screens to simplify this.
+- In the Rig Config window click the Save button.
+- **OPTIONALLY** - Click on Client config and re-enable reprojection to check your configuration.
+
+![Triple Screen Guide](Documentation/Readme_triplescreen.png?raw=true)
 
 ---
 
