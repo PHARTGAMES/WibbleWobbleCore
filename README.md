@@ -1,7 +1,9 @@
 # WibbleWobble v1.5
 
+## WibbleWobble turns your display into a window to virtual worlds.
 
 [![Watch the video](https://img.youtube.com/vi/UCsU6N2qzyI/0.jpg)](https://youtu.be/UCsU6N2qzyI)
+
 
 ## Why WibbleWobble
 
