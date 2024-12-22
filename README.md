@@ -1,4 +1,4 @@
-# WibbleWobble v1.5
+# WibbleWobble v1.6
 
 ## WibbleWobble turns your display into a window to virtual worlds.
 
@@ -19,7 +19,7 @@
  
 3. **NVIDIA killed sequential stereoscopic on 3x series and up cards.:**
    - WibbleWobble implements sequential stereoscopic in open source with the help of Reshade effects such as SuperDepth3D.
-   - WibbleWobble also has arduino sketches for controlling XPand IR shutter glasses as well as any VESA stereoscopic sender unit.
+   - WibbleWobble also has Arduino sketches for controlling XPand IR shutter glasses as well as any VESA stereoscopic sender unit.
    - You don't need a special stereoscopic monitor or video card for this to work either; a 120hz+ monitor with a low response time and preferrably some form of motion blur reduction should work however YMMV.
 
 4. **People have a hard time figuring out the right FOV for games to suit their sim rigs; giant world, distortions etc..:**
@@ -205,6 +205,8 @@
   - The number of microseconds to delay stereo sync at the end of a frame.
 - **DLP 3D Pixel Height:**
   - The height in pixels of the DLP 3D Ready signal line at the bottom of the screen for sequential output to DLP projectors. 0 == disabled.
+- **Black Frame Insertion Interval:**
+  - How often to insert black frames. 1 = every second frame, 2 = every fourth frame, etc.. This is useful for stereo when running your display at 240hz and stereo framerate at 120hz.
   
 ### Game Config
 
@@ -226,7 +228,7 @@
 ### Stereo Config
 
 - **COM Port:** Port for sending stereo sync signals (‘0’ for left eye, ‘1’ for right eye).
-- **Frame Rate:** The expected frame rate of the client. 120 fps here means the client expects to produce a frame at 120fps and will take a frame from the game at 60fps. This number should match your monitors refresh rate.
+- **Frame Rate:** The expected frame rate of the client. 120 fps here means the client expects to produce a frame for each eye at 120fps and will take a frame from the game at 60fps. 
 
 ---
 
@@ -264,7 +266,7 @@
 
 ## Stereoscopic Guide
 
-# Arduino Leonardo VESA Stereo Sync Host
+### Arduino Leonardo VESA Stereo Sync Host
 
  - With this Arduino build you can run a VESA compatible sender to sync shutter glasses.
  
@@ -272,23 +274,23 @@
  
  1. Arduino Leonardo or similar atmega32u4 (Micro, etc). You can probably use others also but the atmega32u4 is known to work. https://www.amazon.com/Arduino-org-A000057-Arduino-Leonardo-Headers/dp/B008A36R2Y
  2. Female miniDIN-3 plug for connecting to VESA sender. https://au.mouser.com/ProductDetail/Same-Sky/MD-30SP?qs=WyjlAZoYn51Euk2oG2XG7w%3D%3D
- 3. AC to DC power adaptor, 5v 1Amp. How you adapt the wiring to the arduino is up to you, I used a plug and socket configuration similar to this https://www.amazon.com/DONYOIE-Regulated-Switching-Replacement-Connector/dp/B0BGPJF1MM
- 4. Wires for connecting everything together. How you do this is up to you. I usually use a prototype board and solder directly between the board and the arduino but regular arduino plug in wires are fine, you will need to solder wires to the miniDIN-3 however.
+ 3. AC to DC power adaptor, 5v 1Amp. How you adapt the wiring to the Arduino is up to you, I used a plug and socket configuration similar to this https://www.amazon.com/DONYOIE-Regulated-Switching-Replacement-Connector/dp/B0BGPJF1MM
+ 4. Wires for connecting everything together. How you do this is up to you. I usually use a prototype board and solder directly between the board and the Arduino but regular Arduino plug in wires are fine, you will need to solder wires to the miniDIN-3 however.
  5. Soldering iron and solder for connecting wires to the the miniDIN-3.
- 6. USB Cable to suit the arduino for connection to the PC.
+ 6. USB Cable to suit the Arduino for connection to the PC.
  
  **Required Software**
  
- 1. Download and install Arduino IDE, you need this to install the sketch onto the arduino - https://www.arduino.cc/en/software
+ 1. Download and install Arduino IDE, you need this to install the sketch onto the Arduino - https://www.Arduino.cc/en/software
  
  
  **Arduino Sketch Installation**
  
- 1. Connect the arduino to the pc with the USB cable, if this is the first time connecting an arduino windows will try set it up.
+ 1. Connect the Arduino to the pc with the USB cable, if this is the first time connecting an Arduino windows will try set it up.
  2. Navigate to the WibbleWobble/Arduino folder and double click the **WWVESASender.ino** file to load it in Arduino IDE; if this doesn't work load the file manually inside Arduino IDE.
- 3. Select the connected arduino in the Select Board box at the top of the window; below the board in the window is the COM port the board is connected to, make a note of this port.
+ 3. Select the connected Arduino in the Select Board box at the top of the window; below the board in the window is the COM port the board is connected to, make a note of this port.
  4. Click the Tick button on the top bar to compile the sketch, there should be no errors in the output window.
- 5. Click the right facing arrow button **->** on the top bar to upload the sketch to the arduino.
+ 5. Click the right facing arrow button **->** on the top bar to upload the sketch to the Arduino.
  6. Once the sketch is uploaded you can close Arduino IDE.
  
  **Reading**
@@ -299,13 +301,13 @@
 
  1. Join the positive terminal of the DC power adapter to pin 1 of the miniDIN-3 connector.
  2. Join the negative terminal of the DC power adapter to pin 2 of the miniDIN-3 connector.
- 3. Join the negative terminal of the DC power adapter to any GND pin on the arduino.
- 4. Join digital pin 4 on the arduino to pin 3 of the miniDIN-3 connector
+ 3. Join the negative terminal of the DC power adapter to any GND pin on the Arduino.
+ 4. Join digital pin 4 of the Arduino to pin 3 of the miniDIN-3 connector
  5. Plug your VESA sender into the miniDIN-3 connector.
- 6. Plug the USB cable into the arduino and connect it to a USB port on the PC or a USB HUB.
+ 6. Plug the USB cable into the Arduino and connect it to a USB port on the PC or a USB HUB.
  7. Plug the DC adaptor into a power socket and turn on.
  
- ![VESA ARDUINO](Documentation/Readme_VESAStereoSyncArduino.png?raw=true)
+ ![VESA Arduino](Documentation/Readme_VESAStereoSyncArduino.png?raw=true)
   
  
  **Usage Steps**
@@ -314,18 +316,24 @@
  2. Configure whatever you are using to output 3D content from the game. Output in either side by side or checkerboard.
  3. Start WibbleWobble (SHIFT + End).
  4. Load the WibbleWobble UI (SHIFT + End).
- 5. Under Stereo Config, choose the com port that your arduino is connected to.
+ 5. Under Stereo Config, choose the com port that your Arduino is connected to.
  6. Under Stereo Config, set the frame rate to the shutter speed of your glasses, usually this will be something like 120fps for most use cases.
  7. Under Client Config, select the appropriate source format (side by side or checkerboard).
  8. Under Client Config, enable Reshade Effects if your 3D content is produced by a ReShade effect (SuperDepth3D).
  9. Under Client Config, (set Vsync to 1 and Enable DWM Flush) **OR** (enable Beam Race sync and adjust the Beam Race Scanline count; 0 is usually fine) **DO NOT ENABLE BOTH VSYNC AND BEAM RACE AT THE SAME TIME**.
  10. Under Client config, enable Stereo thread.
  11. Sync your glasses with the emitter following the manufacturers instructions.
- 12. Under Client Config, while wearing the glasses, adjust Stereo Sync Delay Microseconds until crosstalk disappears.
- 13. Under Client Config, Press the save button.
- 14. Close the WibbleWobble UI (SHIFT + End).
- 15. **OPTIONALLY** If the eye order is uncomfortable for you, you can reverse it by pressing SHIFT + Comma.
-  
+ 12. If you have a 240hz display you can set **Black Frame Insertion Interval** in Client Config to 1 which will insert a black frame between stereo frames thereby greatly reducing crosstalk.
+ 13. Under Client Config, while wearing the glasses, adjust Stereo Sync Delay Microseconds until crosstalk disappears.
+ 14. Under Client Config, Press the save button.
+ 15. Close the WibbleWobble UI (SHIFT + End).
+ 16. **OPTIONALLY** If the eye order is uncomfortable for you, you can reverse it by pressing SHIFT + Comma.
+
+---
+
+## Known Issues
+
+ - GPU Tweak 3 will make WibbleWobble microstutter and cause stereoscopic to be unusable, make sure you disable it before launching.
 
 ---
 
