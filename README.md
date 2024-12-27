@@ -1,4 +1,4 @@
-# WibbleWobble v1.7
+# WibbleWobble v1.8
 
 ## WibbleWobble turns your display into a window to virtual worlds.
 
