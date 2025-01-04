@@ -1,4 +1,4 @@
-# WibbleWobble v1.8
+# WibbleWobble v2.0
 
 ## WibbleWobble turns your display into a window to virtual worlds.
 
@@ -60,7 +60,7 @@
 ## OpenTrack Setup
 
 1. **Install OpenTrack (Win32):**  
-   Version 1.0 of WibbleWobble only supports the Win32 version of OpenTrack. Choose the appropriate installer based on your head tracking device:
+   WibbleWobble only supports the Win32 version of OpenTrack. Choose the appropriate installer based on your head tracking device:
    - [Neural net face tracker and others (OpenTrack 2023.3.0)](https://github.com/opentrack/opentrack/releases/tag/opentrack-2023.3.0)
    - [TrackHat V2 (OpenTrack 3.2 Win32)](https://www.dropbox.com/s/m0x8536mjj32gts/trackhat-opentrack-3.2-win32-setup.exe?dl=1)
    - [TrackHat V1 (OpenTrack 2.2b Win32)](https://www.dropbox.com/s/tdz5uayhqfkt00c/trackhat-opentrack-2.2b-win32-setup.exe?dl=1)
@@ -229,6 +229,24 @@
 
 - **COM Port:** Port for sending stereo sync signals (‘0’ for left eye, ‘1’ for right eye).
 - **Frame Rate:** The expected frame rate of the client. 120 fps here means the client expects to produce a frame for each eye at 120fps and will take a frame from the game at 60fps. 
+
+### Effects Config
+
+- Place a tick in the tickbox to enable an effect.
+- Press the Configure button on an effect to configure it's properties.
+- Press the up and down arrows on an effect to change their order in the list; The first item in the list is applied first.
+
+- **FrameBufferDecode** This should always be enabled if you wish to use the stereoscopic features, it is responsible for decoding side by side, checkerboard etc..
+![EffectManager](Documentation/Readme_effects.png?raw=true)
+
+### Effects Config (FSR 1) 
+Enable both of these effects and ensure that FSREASU is **before** FSRRCAS in the list of effects. Press the Configure button to change settings.
+
+- **FSREASU** [EASU] Edge Adaptive Spatial Upsampling ....... 1x to 4x area range spatial scaling, clamped adaptive elliptical filter. Press the Configure button to change settings.
+- **FSRRCAS** [RCAS] Robust Contrast Adaptive Sharpening .... A non-scaling variation on CAS. Press the Configure button to change settings.
+
+
+
 
 ---
 
