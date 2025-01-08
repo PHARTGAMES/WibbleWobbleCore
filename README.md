@@ -1,4 +1,4 @@
-# WibbleWobble v2.0
+# WibbleWobble v2.1
 
 ## WibbleWobble turns your display into a window to virtual worlds.
 
@@ -88,7 +88,7 @@
 ## Installation for Each Game
 
 1. **Install Reshade Addon:**  
-   Run `WWReshadeAddon/Reshade/ReShade_Setup_6.3.3_Addon.exe` . WibbleWobble v1.0 only supports DX11 and DX12.  
+   Run `WWReshadeAddon/Reshade/ReShade_Setup_6.3.3_Addon.exe` . WibbleWobble only supports DX11 and DX12.  
    *Note: Do not use this version of Reshade with games that have anti-cheat. Use at your own risk.*
    - Install Reshade into the game you want to use. (Depending on the game you may need to perform extra steps to make Reshade work).
 
@@ -144,7 +144,7 @@
 ## Configuration Workflows
 
 - **Toggle UI:**  
-  After launching WibbleWobble, toggle its UI with **Shift + End**.
+  After launching WibbleWobble, toggle its UI with **Shift + END**.
   
 - **Tool Box Window:**  
   The main WibbleWobble UI includes a Tool Box with configuration options.
@@ -224,6 +224,9 @@
   - Disabled: Not used.
   - Head: Device sets the head pose.
 - **Lerp Multiplier:** Adjust head tracking extrapolation (1 = full, 0 = none).
+- **Axis Multipliers (Yaw, Pitch, Roll, X, Y, Z):** Apply multipliers, including -1 to invert.
+
+
 
 ### Stereo Config
 
@@ -231,6 +234,11 @@
 - **Frame Rate:** The expected frame rate of the client. 120 fps here means the client expects to produce a frame for each eye at 120fps and will take a frame from the game at 60fps. 
 
 ### Effects Config
+
+Effects are broken into two types.
+
+- **Frame Buffer Effects:** These effects work on the framebuffer that comes from the game, these are applied first, before reprojection.
+- **Post Effects:** These effects work on the output after reprojection and are performed in screen space.
 
 - Place a tick in the tickbox to enable an effect.
 - Press the Configure button on an effect to configure it's properties.
@@ -246,7 +254,24 @@ Enable both of these effects and ensure that FSREASU is **before** FSRRCAS in th
 - **FSRRCAS** [RCAS] Robust Contrast Adaptive Sharpening .... A non-scaling variation on CAS. Press the Configure button to change settings.
 
 
+### Effects Config (CRT Sim)  [Click me for more information at Blur Busters](https://blurbusters.com/crt-simulation-in-a-gpu-shader-looks-better-than-bfi/)
 
+ **WARNING** : If you want to use this effect, be sure to set Black Frame Insertion Interval in Client Config to 0. Don't enable BFI and this effect at the same time.
+
+ **CRTSim** [CRTsim] Blur Busters CRT Beam Simulator BFI with Seamless Gamma Correction.
+ - Best results occur on display configured to standard SDR gamma curve and ABL/APL disabled to go 100% bandfree
+ - Please set your display gamma to 2.2 or 2.4, turn off ABL/APL in display settings, and set your OLED to SDR mode.  
+ - Will NOT work well with some FALD and MiniLED due to backlight lagbehind effects.
+ - Need future API access to OLED ABL/ABL algorithm to compensate for OLED ABL/APL windowing interference with algorithm.
+
+ **Config Properties**
+- ***BFI Interval:*** How often to insert black frames. 0 = disabled, 1 = every second frame, 2 = every fourth frame, etc..
+- ***Gamma:*** Your display's gamma value. Necessary to prevent horizontal-bands artifacts.
+- ***Gain vs Blur:*** Brightness-vs-motionblur tradeoff for bright pixel.
+  - 1.0 is unchanged brightness (same as non-CRT, but no blur reduction for brightest pixels, only for dimmer pixels).
+  - 0.5 is half brightness spread over fewer frames (creates lower MPRT persistence for darker pixels).
+  - ~0.7 recommended for 240Hz+, ~0.5 recommended for 120Hz due to limited inHz:outHz ratio.
+- ***Scan Direction:*** CRT Scan direction; can be useful to counteract an OS rotation of your display.
 
 ---
 
@@ -346,6 +371,36 @@ Enable both of these effects and ensure that FSREASU is **before** FSRRCAS in th
  14. Under Client Config, Press the save button.
  15. Close the WibbleWobble UI (SHIFT + End).
  16. **OPTIONALLY** If the eye order is uncomfortable for you, you can reverse it by pressing SHIFT + Comma.
+
+---
+## Game Guides
+
+ **These game guides assume you have already done all of the initial setup steps, have installed Reshade/WibbleWobble to the game and running OpenTrack to provide head tracking.**
+
+### Asseto Corsa
+
+This guide is for those using content manager; I recommend using content manager as your AC launcher as it's just more modern.
+
+ - Launch AC content manager.
+ - Navigate to SETTINGS / ASSETTO CORSA / VIEW & UI.
+ - Set the field of view setting to whatever vertical field of view you want to use; 45 degrees in this example.
+ ![AC1](Documentation/Readme_AC1.png?raw=true)
+ 
+ - Start a race session.
+ - Press the F1 key to change camera to the second cockpit view, the first view doesn't support head tracking.
+ - Press SHIFT + END to load WibbleWobble.
+ - Put your head in the centre position and Press SHIFT + . to center tracking.
+ - Press SHIFT + END to open the WibbleWobble UI.
+ - Press the Tracking Config button in the toolbox.
+ - Press the Game Config button in the toolbox.
+ - Change the settings in Tracking Config and Game Config to match the image below, taking care to ensure your vertical field of view matches what you set in content manager.
+ - Window size in Game Config can be whatever you want for the game resolution.
+ ![AC2](Documentation/Readme_AC2.png?raw=true)
+
+ - Put your head in the centre position and Press SHIFT + . to center tracking again to suit the new settings.
+ - Press the save button in the Tracking Config UI.
+ - Press the save button in the Game Config UI.
+ - Press SHIFT + END to close the WibbleWobble UI.
 
 ---
 
