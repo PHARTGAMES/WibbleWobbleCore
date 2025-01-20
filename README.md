@@ -1,9 +1,29 @@
-# WibbleWobble v2.1
+# WibbleWobble v2.2
 
 ## WibbleWobble turns your display into a window to virtual worlds.
 
-[![Watch the video](https://img.youtube.com/vi/UCsU6N2qzyI/0.jpg)](https://youtu.be/UCsU6N2qzyI)
+[![Watch the video](https://youtu.be/ua8QLyMWVdo/0.jpg)](https://youtu.be/ua8QLyMWVdo)
 
+
+## Features
+
+ - Reprojects single view games to any number of screens to make the displays appear to be a window into a virtual world.
+ - Supports flat and curved screens.
+ - Supports Steam VR with and without head tracking. (OpenVR Client).
+ - Supports Reshade for non-VR games with and without head tracking. (ReShade Client).
+ - Supports SuperDepth3D for conversion of flat games to stereoscopic through ReShade and the Reshade Client.
+ - Supports head tracking through OpenTrack.
+ - Can be used in monoscopic and stereoscopic modes; stereoscopic is not required.
+ - Will convert a 60hz side by side or checkerboard stereoscopic source into 120hz sequential stereoscopic.
+ - Supports black frame insertion and Blur Busters CRT simulator for use with either monoscopic or stereoscopic modes to reduce motion blur.
+ - Black frame insertion or CRT sim can be used in stereoscopic to run the game at 60hz, sync glasses at 120hz, and output to the screen at 240hz. You want to do this to reduce crosstalk for the best experience in stereoscopic.
+ - Supports upscalers such as FSR1.
+ - Scalable infrastructure; Game can be run at a lower resolution and framerate than the dispay; WibbleWobble will upscale to display resolution and framerate. (this is NOT frame generation)
+ - Supports a simple Arduino interface for running stereoscopic VESA sender units.
+ - Supports a simple Arduino interface for running infrared and DLP shutter glasses without a VESA sender.
+ - Supports [Open3DOLED](https://github.com/open3doled/open-3d-oled) sync emitter.
+ - Supports sequential DLP projector protocol (3D Ready).
+ - Can be used without reprojection and head tracking if all you want to do is upscale, use the sequential stereoscopic features, black frame insertion, CRT Sim, etc..
 
 ## Why WibbleWobble
 
@@ -33,7 +53,7 @@
 1. **Currently does not work with TrackIR hardware:**
    - If anyone knows a workaround for using TrackIR hardware with OpenTrack please let me know by raising an issue on GitHub.
 
-2. **Head Tracking only works with TrackIR supported games:**
+2. **Head Tracking using the ReShade Client only works with TrackIR supported games:**
    - WibbleWobble provides similar game support as the freetrack 2.0 enhanced output in OpenTrack.
    - Unless you want to support the WibbleWobble public api for head tracking in your application.
 
@@ -44,7 +64,7 @@
 
 # WibbleWobble Setup and Configuration
 
-## Initial Setup
+## Initial Setup (WibbleWobble Install for all Clients)
 
 1. **Download and unzip the latest release:**
 	[Releases Here](https://github.com/PHARTGAMES/WibbleWobbleCore/releases)
@@ -57,7 +77,7 @@
 
 ---
 
-## OpenTrack Setup
+## OpenTrack Setup (Head Tracking for all Clients)
 
 1. **Install OpenTrack (Win32):**  
    WibbleWobble only supports the Win32 version of OpenTrack. Choose the appropriate installer based on your head tracking device:
@@ -83,9 +103,27 @@
    - Under **Output for Axis Assignment**, assign **Yaw, Pitch, Roll, X, Y, Z** 1:1 with no remapping.
    - Disable **Relative translation**.
 
+
 ---
 
-## Installation for Each Game
+## SteamVR Setup (OpenVR Client)
+
+1. Open Steam and install SteamVR if not already installed.
+
+2. Navigate to the WibbleWobbleVR folder and Run Install.bat to register the path of WibbleWobbleVR with SteamVR; you may need to run as administrator.
+
+3. Open <SteamDirectory>\config\steamvr.vrsettings and add the following lines to the steamvr section
+
+"forcedDriver": "WibbleWobbleVR",
+"activateMultipleDrivers": "true",
+
+ **NOTE:** To disable WibbleWobbleVR, remove the "forcedDriver": "WibbleWobbleVR", line.
+ 
+4. To uninstall the driver completely, navigate to the WibbleWobbleVR folder and Run Uninstall.bat; you may need to run as administrator.
+
+---
+
+## Installation for Each Game (ReShade Client)
 
 1. **Install Reshade Addon:**  
    Run `WWReshadeAddon/Reshade/ReShade_Setup_6.3.3_Addon.exe` . WibbleWobble only supports DX11 and DX12.  
@@ -105,7 +143,7 @@
 
 ---
 
-## Launch Workflow
+## Launch Workflow (ReShade Client)
 
 1. **Start the Game:**  
    Launch the game and reach a point where you're viewing the in-game world.
@@ -114,20 +152,52 @@
    Press **Shift + End** to start WibbleWobble.
 
 3. **Configure or Play:**  
-   Once launched, you can adjust WibbleWobble’s settings or begin playing.
+   - Once launched, you can adjust WibbleWobble’s settings () or begin playing.
+   - Game specific settings for the ReShade Client are modified inside "Game Config".
 
 4. **Maintain Focus on the Game Window:**  
-   The game window should remain in focus. If the WibbleWobble window is in focus when the WibbleWobble UI is closed, alt+tab or click on the game window to focus it. This should happen automatically, but if not, refocus manually.
+   The game window should remain in focus. If the WibbleWobble window is in focus when the WibbleWobble UI is closed, **ALT + TAB** or click on the game window to focus it. This should happen automatically, but if not, refocus manually.
    
 5. **ReCenter the view:**
-   Place your head at the centre of the play space and press **"Shift+."** to recenter tracking. You need to do this every time you run WibbleWobble to center the tracking.
+   Place your head at the centre of the play space and press **"SHIFT + ."** to recenter tracking. You need to do this every time you run WibbleWobble to center the tracking.
    If the reprojection behaves strangely such as scaling irregularly this means your head is in the wrong position when recentering. You may need to move your head a little closer or further away than expected when recentering; this takes some practice.
 
 6. **OPTIONALLY: Toggle the overlay focus:**
    Press **"Shift+/"** to toggle the focus on the overlay. You can do this to be able to use the mouse accurately within the game. There is a mouse cursor fix coming to remove the need to do this.
 
 7. **Don't close the WibbleWobble window**
-   WibbleWobble will currently not recover if you close the WibbleWobble window. You must restart the game if you do this. Use the **"Shift+/"** key to toggle the overlay focus if you need to get around the desktop.
+   WibbleWobble will currently not recover if you close the WibbleWobble window. You must restart the game if you do this. Use the **"SHIFT + /"** key to toggle the overlay focus if you need to get around the desktop.
+
+---
+
+## Launch Workflow (OpenVR Client)
+
+1. **Start the Game:**  
+   Launch the game in VR mode;
+   
+2. **Confirm entering VR** (NOT ALL GAMES) If you see a black screen chances are the game is waiting for you to confirm that it should enter VR.
+   - **SHIFT + /** will unfocus the WibbleWobble window allowing you to **ALT + TAB** to find the window for the game and click the required buttons.
+   - **SHIFT + /** again will re-focus the WibbleWobble window once you have confirmed entering VR mode.
+   - Sometimes it's enough to just focus the game window with **ALT + TAB** and hit enter to confirm the option.
+ 
+3. **Configure or Play:**  
+   - Once launched, you can adjust WibbleWobble’s settings or begin playing.
+   - VR specific settings such as resolution, fov, etc.. can be changed inside VR Config.
+   - Changes to Resolution require a SteamVR restart; this is an OpenVR limitation.
+   - Some games prevent the automatic focus change to the WibbleWobbleUI; if you press **SHIFT + END** and nothing happens or the UI draws and you can't control it; focus the WibbleWobble window with **ALT + TAB** to regain control.
+   
+4. **Maintain Focus on the Game Window:**  
+   The game window should remain in focus. If the WibbleWobble window is in focus when the WibbleWobble UI is closed, **ALT + TAB** until the game window is in focus.
+   
+5. **ReCenter the view:**
+   Place your head at the centre of the play space and press **"SHIFT + ."** to recenter tracking. You need to do this every time you run WibbleWobble to center the tracking.
+   If the reprojection behaves strangely such as scaling irregularly this means your head is in the wrong position when recentering. You may need to move your head a little closer or further away than expected when recentering; this takes some practice.
+   
+6. **OPTIONALLY: Toggle the overlay focus:**
+   Press **"SHIFT + /"** to toggle the focus on the overlay. You can do this to be able to use the mouse accurately within the game. There is a mouse cursor fix coming to remove the need to do this.
+
+7. **Don't close the WibbleWobble window**
+   WibbleWobble will currently not recover if you close the WibbleWobble window. You must restart the game if you do this. Use the **SHIFT + /** key to toggle the overlay focus if you need to get around the desktop.
 
 ---
 
@@ -149,12 +219,14 @@
 - **Tool Box Window:**  
   The main WibbleWobble UI includes a Tool Box with configuration options.
 
+
 ### Rig Configuration
 
 - Click **Rig Config** in the Tool Box to open the Rig Configuration window.
 - Left mouse and drag within the screen visualiser rotates around the screens.
 - Mouse scroll wheel while hovering the screen visualiser zooms in and out.
 - Click **Edit Screen 0** to open the Screen Config.
+
 
 ### Edit Screen #
 
@@ -174,6 +246,7 @@
 - **Radius (m)**: Curve radius.
 - **Fill Angle (°)**: Curve coverage in degrees.
 - **Curve Steps**: Higher values result in a smoother curve.
+
 
 ### Client Config
 
@@ -207,8 +280,12 @@
   - The height in pixels of the DLP 3D Ready signal line at the bottom of the screen for sequential output to DLP projectors. 0 == disabled.
 - **Black Frame Insertion Interval:**
   - How often to insert black frames. 1 = every second frame, 2 = every fourth frame, etc.. This is useful for stereo when running your display at 240hz and stereo framerate at 120hz.
+- **Elevate Process Priority:**  
+  - Enabled: Attempt to elevate the process priority to realtime; this can be useful with the OpenVR Client to allow it more time to do it's thing, it can also cause issues and won't work outside of an administrator account. Use wisely.
+  - Disabled: No process priority elevation.
   
-### Game Config
+  
+### Game Config (Reshade Client)
 
 - **Window Size (X,Y pixels):** WibbleWobble resizes the game window to these values.
 - **FOV Vertical (°):** Vertical field of view of the game in degrees. This should match the field of view set in the game. Some games use an abstract value for this and it may not match 1:1. Changing this this value also recalculates FOV Horizontal to suit the game window aspect ratio.
@@ -217,6 +294,24 @@
 - **Frame Capture Delay:** Frame delay for reducing visual judder.
 - **Axis Mappings (Yaw, Pitch, Roll):** Remap if the game’s axes differ.
 - **Axis Multipliers (Yaw, Pitch, Roll, X, Y, Z):** Apply multipliers, including -1 to invert.
+
+  
+### VR Config (OpenVR Client)
+
+- **Resolution (X,Y pixels):** This is the render resolution of each eye. If you change Resolution values, you must save and restart SteamVR; this is an OpenVR limitation.
+- **Display Frequency:** Display frequency in hz. if you change Display Frequency you must save and restart SteamVR; this is an OpenVR limitation.
+- **FOV Vertical (°):** Vertical field of view of the game in degrees. Changing this this value also recalculates FOV Horizontal to suit the Resolution aspect ratio.
+- **FOV Horizontal (°):** Horizontal field of view of the game in degrees. Changing this this value also recalculates FOV Vertical to suit the Resolution aspect ratio.
+- **World Scale:** Usually leave at 1.0.
+- **IPD:** Interpupilary distance; the distance between your eyes in metres.
+- **Focal Length:** The focus distance from your eyes in metres.
+- **Frame Capture Delay:** Frame delay for reducing visual judder.
+- **Optimise Single Eye:** This breaks some games so if you get weird artifacts try setting this to Disabled. if you change this setting you must save and restart SteamVR; this is an OpenVR limitation.
+  - Disabled: Draw both eyes, left then right, no optimisation.
+  - Left: Draw only the left eye.
+  - Right: Draw only the right eye.
+  - Both: Draw both eyes side by side, each with half FOV. This is probably the buggiest option; can look messed up due to vignette, eyes can render out of sync, etc...
+
 
 ### Tracking Config
 
@@ -227,11 +322,11 @@
 - **Axis Multipliers (Yaw, Pitch, Roll, X, Y, Z):** Apply multipliers, including -1 to invert.
 
 
-
 ### Stereo Config
 
 - **COM Port:** Port for sending stereo sync signals (‘0’ for left eye, ‘1’ for right eye).
 - **Frame Rate:** The expected frame rate of the client. 120 fps here means the client expects to produce a frame for each eye at 120fps and will take a frame from the game at 60fps. 
+
 
 ### Effects Config
 
@@ -272,6 +367,30 @@ Enable both of these effects and ensure that FSREASU is **before** FSRRCAS in th
   - 0.5 is half brightness spread over fewer frames (creates lower MPRT persistence for darker pixels).
   - ~0.7 recommended for 240Hz+, ~0.5 recommended for 120Hz due to limited inHz:outHz ratio.
 - ***Scan Direction:*** CRT Scan direction; can be useful to counteract an OS rotation of your display.
+
+
+### Open3D OLED Config [Click me for more information](https://github.com/open3doled/open-3d-oled)
+
+ Open3D OLED uses on screen trigger boxes to trigger it's emitter, this configuration ui allows changing the trigger box position and dimensions.
+
+- **Scale:** Scales the entire trigger box; any value greater than zero will enable the trigger box. Set to 1.0 to use absolute sizes specified below.
+
+- **Background: Top Left X:** Background frame top left X coordinate in pixels relative to the top left of the screen.
+- **Background: Top Left Y:** Background frame top left Y coordinate in pixels relative to the top left of the screen.
+- **Background: Size X:** Background frame width in pixels.
+- **Background: Size Y:**  Background frame height in pixels.
+
+- **Left Trigger: Top Left X:** Left eye trigger X coordinate in pixels relative to **Background: Top Left X**.
+- **Left Trigger: Top Left Y:** Left eye trigger Y coordinate in pixels relative to **Background: Top Left Y**.
+- **Left Trigger: Size X:** Left eye trigger width in pixels.
+- **Left Trigger: Size Y:** Left eye trigger height in pixels.
+
+- **Right Trigger: Top Left X:** Right eye trigger X coordinate in pixels relative to **Background: Top Left X**.
+- **Right Trigger: Top Left Y:** Right eye trigger Y coordinate in pixels relative to **Background: Top Left Y**.
+- **Right Trigger: Size X:** Right eye trigger width in pixels.
+- **Right Trigger: Size Y:** Right eye trigger height in pixels.
+
+**WARNING**: When using on screen trigger boxes it's advised to move the box and reposition the emitter occasionally to prevent burn in on screens susceptible to burn in.
 
 ---
 
