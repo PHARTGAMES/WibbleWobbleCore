@@ -1,4 +1,4 @@
-# WibbleWobble v2.2
+# WibbleWobble v2.3
 
 ## WibbleWobble turns your display into a window to virtual worlds.
 
@@ -22,6 +22,7 @@
  - Supports a simple Arduino interface for running stereoscopic VESA sender units.
  - Supports a simple Arduino interface for running infrared and DLP shutter glasses without a VESA sender.
  - Supports [Open3DOLED](https://github.com/open3doled/open-3d-oled) sync emitter.
+ - Supports NVIDIA Emitter. Thanks to [FlintEastwood, cms and others](https://github.com/FlintEastwood/3DVisionActivator) for their work on making this emitter function.
  - Supports sequential DLP projector protocol (3D Ready).
  - Can be used without reprojection and head tracking if all you want to do is upscale, use the sequential stereoscopic features, black frame insertion, CRT Sim, etc..
 
@@ -119,7 +120,25 @@
 
  **NOTE:** To disable WibbleWobbleVR, remove the "forcedDriver": "WibbleWobbleVR", line.
  
-4. To uninstall the driver completely, navigate to the WibbleWobbleVR folder and Run Uninstall.bat; you may need to run as administrator.
+4. Disable head tracking for room setup.
+
+5. Launch Steam VR
+
+6. Press **SHIFT + /** to toggle the focus on the overlay and then **ALT + TAB** to the SteamVR widget.
+
+5. Click on the hamburger icon top left of the SteamVR widget and select **Room Setup**
+
+6. Select **STANDING ONLY**
+
+7. For **ESTABLISH TRACKING** it should say **Headset Ready**, click **NEXT**
+
+8. For **Calibrate your space.** click **CALIBRATE CENTER** and wait; then click **NEXT**
+
+9. For **Locate the floor.** you can set this to the distance that your head is from the floor or leave it at 0, then click **CALIBRATE FLOOR** and wait; then click **NEXT**
+
+10. Click **DONE**
+ 
+**To uninstall the driver completely, navigate to the WibbleWobbleVR folder and Run Uninstall.bat; you may need to run as administrator.**
 
 ---
 
@@ -163,7 +182,7 @@
    If the reprojection behaves strangely such as scaling irregularly this means your head is in the wrong position when recentering. You may need to move your head a little closer or further away than expected when recentering; this takes some practice.
 
 6. **OPTIONALLY: Toggle the overlay focus:**
-   Press **"Shift+/"** to toggle the focus on the overlay. You can do this to be able to use the mouse accurately within the game. There is a mouse cursor fix coming to remove the need to do this.
+   Press **Shift + /** to toggle the focus on the overlay. You can do this to be able to use the mouse accurately within the game. There is a mouse cursor fix coming to remove the need to do this.
 
 7. **Don't close the WibbleWobble window**
    WibbleWobble will currently not recover if you close the WibbleWobble window. You must restart the game if you do this. Use the **"SHIFT + /"** key to toggle the overlay focus if you need to get around the desktop.
@@ -249,33 +268,35 @@
 
 
 ### Client Config
+Hints: 
+
+Effective refresh rate: This is how often in HZ WibbleWobble will send a frame to the screen. (See **Display Refresh Rate HZ** in Client Config)
+
+Half Effective refresh rate: This is half how often in HZ WibbleWobble will send a frame to the screen. (See **Display Refresh Rate HZ** in Client Config)
 
 - **Window Size (X, Y pixels):** Overlay window dimensions. Match your desktop/monitor with scaling disabled.
 - **Source Format:**
   - Single:  The image coming from the game is expected to be a single view.
-  - Side by Side: The image coming from the game is expected to be in stereoscopic side by side format.
+  - Side by Side Half: The image coming from the game is expected to be in stereoscopic side by side format where each eye is half the source width. (Most software will output sbs in this format)
   - Checkerboard: The image coming from the game is expected to be in checkerboard format.
+  - Side by Side Full: The image coming from the game is expected to be in stereoscopic side by side format where each eye is the full source width.
 - **Reshade Effects:**
   - Enabled: Captures image with Reshade effects.
   - Disabled: Captures image without Reshade effects.
 - **Reprojection:**
   - Enabled: Uses head tracking for reprojection.
   - Disabled: No reprojection, just stretches the image.
-- **VSYNC (0,1,2)**: Controls vertical sync options.
-- **FrameRate (0 to ∞):** Limits client framerate. (0 = no limit)
+- **Display Refresh Rate HZ (0 to ∞):** Enter your display refresh rate here. It should be the exact value seen in System/Display/Advanced display settings. If you leave this at 0 the system will guess, but it can get it wrong.
+- **Frame Rate Limit HZ (0 to ∞):** Limits client framerate. Only use this if you aren't using Stereo and are happy with tearing (0 = no limit)
+- **VSYNC (0,1,2)**: Controls vertical sync options. Do not enable **Beam Race Sync** and this at the same time. Do not use **Frame Rate Limit HZ** and this at the same time
 - **DWM Flush:**
-  - Enabled: Calls DWMFlush() after present.
+  - Enabled: Calls DWMFlush() after present; Useful in stereoscopic with VSYNC set to 1.
   - Disabled: Default.
 - **Beam Race Sync:**
-  - Enabled: Another form of vsync for stereoscopic.
+  - Enabled: Another form of vsync for stereoscopic. Do not enable **VSYNC** and this at the same time. Do not enable **DWMFlush** with this. Do not use **Frame Rate Limit HZ** and this at the same time.
   - Disabled: Off.
 - **Beam Race Scanline Count:** 
   - Scanline count to wait after vertical blank.
-- **Stereo Thread:**
-  - Enabled: Stereoscopic sync happens on a separate thread.
-  - Disabled: Stereoscopic sync happens on the main thread.
-- **Stereo Sync Delay Microseconds:**
-  - The number of microseconds to delay stereo sync at the end of a frame.
 - **DLP 3D Pixel Height:**
   - The height in pixels of the DLP 3D Ready signal line at the bottom of the screen for sequential output to DLP projectors. 0 == disabled.
 - **Black Frame Insertion Interval:**
@@ -311,6 +332,9 @@
   - Left: Draw only the left eye.
   - Right: Draw only the right eye.
   - Both: Draw both eyes side by side, each with half FOV. This is probably the buggiest option; can look messed up due to vignette, eyes can render out of sync, etc...
+- **Headset Identification:** This setting is required by some apps that explicitly limit support to certain headset brands/models. (For example: DEOVR requires WibbleWobble to identify as a Vive for head tracking to work.)
+  - WibbleWobble: Default.
+  - Vive: Identify as a Vive.
 
 
 ### Tracking Config
@@ -322,11 +346,44 @@
 - **Axis Multipliers (Yaw, Pitch, Roll, X, Y, Z):** Apply multipliers, including -1 to invert.
 
 
-### Stereo Config
+### Emitter Config
+Hints:
 
-- **COM Port:** Port for sending stereo sync signals (‘0’ for left eye, ‘1’ for right eye).
-- **Frame Rate:** The expected frame rate of the client. 120 fps here means the client expects to produce a frame for each eye at 120fps and will take a frame from the game at 60fps. 
+Effective refresh rate: This is how often in HZ WibbleWobble will send a frame to the screen. (See **Display Refresh Rate HZ** in Client Config)
 
+Half Effective refresh rate: This is half how often in HZ WibbleWobble will send a frame to the screen. (See **Display Refresh Rate HZ** in Client Config)
+
+- **Sync Rate HZ:** This is the rate the emitter syncs each eye. Use one of the hints at top of the window to calculate this value. Make sure Your **Display Refresh Rate HZ** in Client Config is set to the refresh rate of your display.
+- **Sync Offset Microseconds:** This is a time offset from vsync before syncing the emitter; can be negative to shutter glasses before vsync if needed.
+
+
+### ComPort Config
+
+- **COM Port:** Port for sending stereo sync signals; disabled when set to None.
+
+
+### NVIDIA Config
+Hints: 
+
+Effective refresh duration: This is how often in microseconds WibbleWobble will send a frame to the screen. (See **Display Refresh Rate HZ** in Client Config)
+
+Sync Rate duration: This is how often in microseconds the emitter will sync. (See **Sync Rate HZ** in Emitter Config)
+
+Half Sync Rate duration: This is half of how often in microseconds the emitter will sync. (See **Sync Rate HZ** in Emitter Config)
+
+- **Enabled:** Check the box to enable the emitter.
+- **Open Delay Microseconds:** Delay in microseconds from the sync point before the emitter opens an eye. I find leaving this at 0 and changing the **Sync Offset Microseconds** in Emitter Config works better for a sync offset.
+- **Open Duration Microseconds:** How long an eye stays open in microseconds. Tune this value relative to the hints at the top of the window **Sync Rate duration** and **Half Sync Rate duration**. You want this value to be less than **Sync Rate duration** or you won't get stereo.
+- **W:** W is a mystery but it's one of the timing values that's sent with the protocol so it's here for completeness. Doesn't seem to do anything, i've been using it at 0 happily.
+
+
+**If you do not have the driver for the NVIDIA emitter installed, it is available in the 425.31 nvidia drivers package**
+
+ - Run the graphics driver installer, but don't install just let it extract the files.
+ - Take note of where the drivers files are extracted to.
+ - In explorer navigate to the folder that the files are extracted to. 
+ - The emitter driver is located in a sub-folder named NV3DVisionUSB.Driver. 
+ - Now you can close the 425.31 graphics driver installer and install only the emitter driver.
 
 ### Effects Config
 
@@ -351,7 +408,7 @@ Enable both of these effects and ensure that FSREASU is **before** FSRRCAS in th
 
 ### Effects Config (CRT Sim)  [Click me for more information at Blur Busters](https://blurbusters.com/crt-simulation-in-a-gpu-shader-looks-better-than-bfi/)
 
- **WARNING** : If you want to use this effect, be sure to set Black Frame Insertion Interval in Client Config to 0. Don't enable BFI and this effect at the same time.
+ **WARNING** : If you want to use this effect, be sure to set Black Frame Insertion Interval in Client Config to 0. **Don't enable BFI and this effect at the same time.**
 
  **CRTSim** [CRTsim] Blur Busters CRT Beam Simulator BFI with Seamless Gamma Correction.
  - Best results occur on display configured to standard SDR gamma curve and ABL/APL disabled to go 100% bandfree
@@ -472,24 +529,24 @@ Enable both of these effects and ensure that FSREASU is **before** FSRRCAS in th
  ![VESA Arduino](Documentation/Readme_VESAStereoSyncArduino.png?raw=true)
   
  
- **Usage Steps**
+ **Usage Steps** (Be sure to save your settings)
  
  1. Run the game.
  2. Configure whatever you are using to output 3D content from the game. Output in either side by side or checkerboard.
  3. Start WibbleWobble (SHIFT + End).
  4. Load the WibbleWobble UI (SHIFT + End).
- 5. Under Stereo Config, choose the com port that your Arduino is connected to.
- 6. Under Stereo Config, set the frame rate to the shutter speed of your glasses, usually this will be something like 120fps for most use cases.
+ 5. Under Client Config, set **Display Refresh Rate HZ** to match your display refresh rate. This is very important as it effects all of the other timing values.
  7. Under Client Config, select the appropriate source format (side by side or checkerboard).
  8. Under Client Config, enable Reshade Effects if your 3D content is produced by a ReShade effect (SuperDepth3D).
- 9. Under Client Config, (set Vsync to 1 and Enable DWM Flush) **OR** (enable Beam Race sync and adjust the Beam Race Scanline count; 0 is usually fine) **DO NOT ENABLE BOTH VSYNC AND BEAM RACE AT THE SAME TIME**.
- 10. Under Client config, enable Stereo thread.
- 11. Sync your glasses with the emitter following the manufacturers instructions.
- 12. If you have a 240hz display you can set **Black Frame Insertion Interval** in Client Config to 1 which will insert a black frame between stereo frames thereby greatly reducing crosstalk.
- 13. Under Client Config, while wearing the glasses, adjust Stereo Sync Delay Microseconds until crosstalk disappears.
- 14. Under Client Config, Press the save button.
- 15. Close the WibbleWobble UI (SHIFT + End).
- 16. **OPTIONALLY** If the eye order is uncomfortable for you, you can reverse it by pressing SHIFT + Comma.
+ 9. Under Client Config, (set Vsync to 1 and **Optionally** Enable DWM Flush) **OR** (enable Beam Race sync and adjust the Beam Race Scanline count; 0 is usually fine) **DO NOT ENABLE BOTH VSYNC AND BEAM RACE AT THE SAME TIME**.
+ 10. Under Client Config, ensure that **Frame Rate Limit HZ** is set to 0. Any other value here will interfere with the refresh rate at vsync.
+ 11. Under Emitter Config, set Sync Rate HZ to the rate you want to sync the glasses, this can be either the effective refresh rate, or half the effective refresh rate if you are using black frame insertion. Use the hints in Emitter Config to help choose this value.
+ 12. Under Emitter Config, press the config button appropriate to the emitter you are using, if you are using the arduino emitter select ComPort Config and set the com port. For NVIDIA select NVIDIA Config and set the options in the NVIDIA Config section following the documentation.
+ 13. Sync your glasses with the emitter following the manufacturers instructions.
+ 14. If you have a 240hz display you can set **Black Frame Insertion Interval** in Client Config to 1 which will insert a black frame between stereo frames thereby greatly reducing crosstalk.
+ 15. Under Emitter Config, while wearing the glasses, adjust the **Sync Offset Microseconds** value to offset the opening time of the shutter glasses. 
+ 16. Close the WibbleWobble UI (SHIFT + End).
+ 17. **OPTIONALLY** If the eye order is uncomfortable for you, you can reverse it by pressing SHIFT + Comma.
 
 ---
 ## Game Guides
